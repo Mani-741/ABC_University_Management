@@ -16,16 +16,17 @@ This application uses a **Multi-Layered Architecture** to ensure strict separati
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#0d1117', 'edgeLabelBackground':'#161b22', 'tertiaryColor': '#161b22', 'lineColor': '#58a6ff'}}}%%
 
-flowchart LR
-    %% Motion effect for nodes: Pulse
+flowchart TD
+    %% Motion effect class definition: Pulse (applied to SL, EF, and DI_Cont for visual impact)
     classDef pulsing fill:#1f293a,stroke:#58a6ff,stroke-width:2px,rx:8,ry:8,color:white,font-weight:bold;
     classDef internalNode fill:#161b22,stroke:#30363d,stroke-width:1px,rx:5,ry:5,color:#c9d1d9;
     classDef persistence fill:#2ea44f,stroke:#1a7f37,stroke-width:2px,rx:10,ry:10,color:white;
     classDef databaseNode fill:#f97316,stroke:#ea580c,stroke-width:2px,rx:12,ry:12,color:white;
 
-    User([👤 User: Admin/Faculty/Student]):::pulsing -->|Request| Nginx{{Web Server/Kestrel}}
+    %% Workflow start
+    User([👤 User: Admin/Faculty/Student]):::pulsing -->|HTTP Request| Nginx{{Web Server/Kestrel}}
     
-    subgraph Presentation_Layer [📂 Views & Controllers]
+    subgraph Presentation_Layer [Presentation Layer: Views & Controllers]
         direction TB
         Nginx -->|Route Request| Ctrl[C# Controllers]:::internalNode
         Ctrl -->|Bind Data| Razor(Razor Views .cshtml):::internalNode
@@ -33,27 +34,29 @@ flowchart LR
     
     Ctrl -->|Invoke Action| DI_Cont(DI Container <br> Program.cs):::pulsing
     
-    subgraph App_Layer [📂 Services & Business Logic]
+    subgraph App_Layer [Application Layer: Services & Business Logic]
         direction TB
         DI_Cont -->|Instantiate| SI[Service Interfaces]:::internalNode
         SI -->|Implement| SL[Service Implementations]:::pulsing
-        SL -.->|Apply Business Rules| MD_S[shared: Domain Models]
     end
     
+    %% Models are shared across all logic layers
+    subgraph Shared_Domain [Domain Layer]
+        MD[Models / Entities]:::internalNode
+    end
+    
+    SL -.->|Apply Rules to| MD
     SL -->|Query Data| RI[Repository Interfaces]:::internalNode
     
-    subgraph Data_Access_Layer [📂 Repositories & DbContext]
+    subgraph Data_Access_Layer [Data Layer: Repositories & DbContext]
         direction TB
         RI -->|Implement| RL[Repository Implementations]:::internalNode
         RL -->|LINQ Queries| DBC[[UniversityDbContext]]:::persistence
-        DBC -.->|Map to Entities| MD_D[shared: Domain Models]
     end
     
+    DBC -.->|Map to| MD
     DBC -->|Generate T-SQL| EF[EF Core ORM Layer]:::pulsing
     EF -->|Execute Commands| SQLServer[(🗄 SQL Server)]:::databaseNode
-
-    %% Global Assets
-    WWW[wwwroot/ Static Assets]:::internalNode -.->|Loaded by| Razor
 ```
 ---
 
