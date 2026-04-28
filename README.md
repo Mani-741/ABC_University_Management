@@ -6,7 +6,7 @@
 [![Database](https://img.shields.io/badge/SQL--Server-EF--Core-blue)](https://learn.microsoft.com/en-us/ef/core/)
 [![Architecture](https://img.shields.io/badge/Pattern-Repository--Service-green)](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/repository-pattern)
 
-A comprehensive Academic Management solution built with **ASP.NET Core MVC**. This project demonstrates a high-scale architecture transition from core business logic to a full-stack web application, utilizing **Entity Framework Core (Code-First)** and the **Repository Pattern**.
+The **University Academic Management System (UAMS)** is a centralized digital ecosystem designed to streamline and automate the complex administrative workflows of a higher education institution. It serves as a single "source of truth" for academic data, bridging the gap between student self-service, faculty grading, and administrative oversight.
 
 ---
 
