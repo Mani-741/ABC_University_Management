@@ -47,7 +47,7 @@ flowchart TD
 ## 📊 Database Tables & Relationships
 The system is built on a relational database design with strong referential integrity. I utilized Fluent API and Data Annotations to enforce business rules at the database level.
 
-```
+```mermaid
 erDiagram
     User ||--|| Student : "is assigned"
     Student ||--o{ Enrollment : "registers"
