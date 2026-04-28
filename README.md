@@ -68,35 +68,58 @@ The system is built on a relational database design with strong referential inte
 
 ```mermaid
 
-flowchart TD
-    %% Node Definitions
-    User[👤 USER TABLE <br><i>Base Identity</i>]:::pulsing
-    Student[🎓 STUDENT PROFILE <br><i>Academic Info</i>]:::pulsing
-    Course[📚 COURSE CATALOG <br><i>Subject Details</i>]:::pulsing
+erDiagram
+    %% Core Identity
+    USER ||--|| STUDENT : "is a"
     
-    subgraph Activities [Transaction & Record Tables]
-        Enroll[📝 ENROLLMENT <br><i>Status: Enrolled/Dropped</i>]:::action
-        Grade[⭐ GRADE <br><i>Score: A, B, C...</i>]:::action
-        Record[📜 ACADEMIC RECORD <br><i>Semester History</i>]:::action
-    end
+    %% Academic Links
+    STUDENT ||--o{ ENROLLMENT : "registers"
+    STUDENT ||--o{ GRADE : "earns"
+    STUDENT ||--o{ ACADEMIC_RECORD : "finalizes"
+    
+    COURSE ||--o{ ENROLLMENT : "contains"
+    COURSE ||--o{ GRADE : "assigned to"
+    COURSE ||--o{ ACADEMIC_RECORD : "history of"
 
-    %% Simple Relationships
-    User -->|One User owns One| Student
-    
-    Student ---|Linked via StudentId| Enroll
-    Course ---|Linked via CourseId| Enroll
-    
-    Student ---|Linked via StudentId| Grade
-    Course ---|Linked via CourseId| Grade
-    
-    Student ---|Linked via StudentId| Record
-    Course ---|Linked via CourseId| Record
+    USER {
+        int UserId PK
+        string Email
+        string Role
+    }
 
-    %% Styling
-    classDef pulsing fill:#1f293a,stroke:#58a6ff,stroke-width:2px,color:white,font-weight:bold;
-    classDef action fill:#161b22,stroke:#30363d,stroke-width:1px,color:#c9d1d9;
-    classDef layerBox fill:#0d1117,stroke:#58a6ff,stroke-dasharray: 5 5;
-    class Activities layerBox;
+    STUDENT {
+        int StudentId PK
+        int UserId FK "Links to User"
+        string Name
+        string Department
+    }
+
+    COURSE {
+        int CourseId PK
+        string CourseName
+        int Credits
+    }
+
+    ENROLLMENT {
+        int EnrollmentId PK
+        int StudentId FK
+        int CourseId FK
+        string Status "Enrolled/Dropped"
+    }
+
+    GRADE {
+        int GradeId PK
+        int StudentId FK
+        int CourseId FK
+        string GradeValue "A-F"
+    }
+
+    ACADEMIC_RECORD {
+        int RecordId PK
+        int StudentId FK
+        int CourseId FK
+        string Semester
+    }
 ```
 ---
 
