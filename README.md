@@ -67,52 +67,59 @@ flowchart TD
 The system is built on a relational database design with strong referential integrity. I utilized Fluent API and Data Annotations to enforce business rules at the database level.
 
 ```mermaid
-erDiagram
-    User ||--|| Student : "is assigned"
-    Student ||--o{ Enrollment : "registers"
-    Student ||--o{ Grade : "receives"
-    Student ||--o{ AcademicRecord : "maintains"
-    
-    Course ||--o{ Enrollment : "has"
-    Course ||--o{ Grade : "awarded in"
-    Course ||--o{ AcademicRecord : "is recorded in"
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#0d1117', 'edgeLabelBackground':'#161b22', 'tertiaryColor': '#161b22', 'lineColor': '#58a6ff', 'mainBkg': '#0d1117'}}}%%
 
-    User {
+erDiagram
+    %% Core Identity
+    USER ||--|| STUDENT : "is a"
+    
+    %% Academic Links
+    STUDENT ||--o{ ENROLLMENT : "registers"
+    STUDENT ||--o{ GRADE : "earns"
+    STUDENT ||--o{ ACADEMIC_RECORD : "finalizes"
+    
+    COURSE ||--o{ ENROLLMENT : "contains"
+    COURSE ||--o{ GRADE : "assigned to"
+    COURSE ||--o{ ACADEMIC_RECORD : "history of"
+
+    USER {
         int UserId PK
         string Email
-        string Password
-        Role Role
+        string Role
     }
 
-    Student {
+    STUDENT {
         int StudentId PK
-        int UserId FK
+        int UserId FK "Links to User"
         string Name
-        string Email
         string Department
-        int EnrollmentYear
     }
 
-    Course {
+    COURSE {
         int CourseId PK
         string CourseName
         int Credits
-        string SemesterOffered
     }
 
-    Enrollment {
+    ENROLLMENT {
         int EnrollmentId PK
         int StudentId FK
         int CourseId FK
-        Enum Status "Enrolled/Dropped"
+        string Status "Enrolled/Dropped"
     }
 
-    Grade {
+    GRADE {
         int GradeId PK
         int StudentId FK
         int CourseId FK
         string GradeValue "A-F"
-        string Remarks
+    }
+
+    ACADEMIC_RECORD {
+        int RecordId PK
+        int StudentId FK
+        int CourseId FK
+        string Semester
     }
 
 ```
