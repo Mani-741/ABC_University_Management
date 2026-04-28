@@ -14,49 +14,52 @@ A comprehensive Academic Management solution built with **ASP.NET Core MVC**. Th
 
 This application uses a **Multi-Layered Architecture** to ensure strict separation of concerns, making the system highly maintainable and testable.
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#0d1117', 'edgeLabelBackground':'#161b22', 'tertiaryColor': '#161b22', 'lineColor': '#58a6ff'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#161b22', 'edgeLabelBackground':'#0d1117', 'tertiaryColor': '#0d1117', 'lineColor': '#58a6ff', 'mainBkg': '#0d1117'}}}%%
 
 flowchart TD
-    %% Motion effect class definition: Pulse (applied to SL, EF, and DI_Cont for visual impact)
-    classDef pulsing fill:#1f293a,stroke:#58a6ff,stroke-width:2px,rx:8,ry:8,color:white,font-weight:bold;
-    classDef internalNode fill:#161b22,stroke:#30363d,stroke-width:1px,rx:5,ry:5,color:#c9d1d9;
-    classDef persistence fill:#2ea44f,stroke:#1a7f37,stroke-width:2px,rx:10,ry:10,color:white;
-    classDef databaseNode fill:#f97316,stroke:#ea580c,stroke-width:2px,rx:12,ry:12,color:white;
+    %% Custom Styling for a Professional Dark Theme
+    classDef userNode fill:#238636,stroke:#2ea44f,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef layerBox fill:#0d1117,stroke:#30363d,stroke-width:2px,color:#58a6ff,font-style:italic;
+    classDef actionNode fill:#1f293a,stroke:#58a6ff,stroke-width:1px,color:#c9d1d9;
+    classDef pulsingNode fill:#1f293a,stroke:#58a6ff,stroke-width:3px,color:#ffffff,font-weight:bold;
+    classDef dbNode fill:#bd2c00,stroke:#f97316,stroke-width:2px,color:#ffffff;
+    classDef persistenceNode fill:#238636,stroke:#2ea44f,stroke-width:2px,color:#ffffff;
 
     %% Workflow start
-    User([👤 User: Admin/Faculty/Student]):::pulsing -->|HTTP Request| Nginx{{Web Server/Kestrel}}
+    User([👤 User: Admin/Faculty/Student]):::userNode -->|HTTP Request| Nginx{{Web Server / Kestrel}}:::actionNode
     
-    subgraph Presentation_Layer [Presentation Layer: Views & Controllers]
+    subgraph Presentation_Layer [Presentation Layer]
         direction TB
-        Nginx -->|Route Request| Ctrl[C# Controllers]:::internalNode
-        Ctrl -->|Bind Data| Razor(Razor Views .cshtml):::internalNode
+        Nginx -->|Route Request| Ctrl[C# Controllers]:::actionNode
+        Ctrl -->|Bind Data| Razor(Razor Views .cshtml):::actionNode
     end
     
-    Ctrl -->|Invoke Action| DI_Cont(DI Container <br> Program.cs):::pulsing
+    Ctrl -->|Invoke Action| DI_Cont(DI Container <br> Program.cs):::pulsingNode
     
-    subgraph App_Layer [Application Layer: Services & Business Logic]
+    subgraph App_Layer [Application Layer]
         direction TB
-        DI_Cont -->|Instantiate| SI[Service Interfaces]:::internalNode
-        SI -->|Implement| SL[Service Implementations]:::pulsing
+        DI_Cont -->|Instantiate| SI[Service Interfaces]:::actionNode
+        SI -->|Implement| SL[Service Implementations]:::pulsingNode
     end
     
-    %% Models are shared across all logic layers
-    subgraph Shared_Domain [Domain Layer]
-        MD[Models / Entities]:::internalNode
-    end
+    %% Models Shared
+    MD[Domain Models / Entities]:::actionNode
     
-    SL -.->|Apply Rules to| MD
-    SL -->|Query Data| RI[Repository Interfaces]:::internalNode
+    SL -.->|Apply Rules| MD
+    SL -->|Query Data| RI[Repository Interfaces]:::actionNode
     
-    subgraph Data_Access_Layer [Data Layer: Repositories & DbContext]
+    subgraph Data_Layer [Data Access Layer]
         direction TB
-        RI -->|Implement| RL[Repository Implementations]:::internalNode
-        RL -->|LINQ Queries| DBC[[UniversityDbContext]]:::persistence
+        RI -->|Implement| RL[Repository Implementations]:::actionNode
+        RL -->|LINQ Queries| DBC[[UniversityDbContext]]:::persistenceNode
     end
     
     DBC -.->|Map to| MD
-    DBC -->|Generate T-SQL| EF[EF Core ORM Layer]:::pulsing
-    EF -->|Execute Commands| SQLServer[(🗄 SQL Server)]:::databaseNode
+    DBC -->|Generate T-SQL| EF[EF Core ORM Layer]:::pulsingNode
+    EF -->|Execute Commands| SQLServer[(🗄 SQL Server Database)]:::dbNode
+
+    %% Styling the Subgraph Headers
+    class Presentation_Layer,App_Layer,Data_Layer layerBox;
 ```
 ---
 
