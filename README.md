@@ -13,7 +13,7 @@ A comprehensive Academic Management solution built with **ASP.NET Core MVC**. Th
 ## 🏗 Architecture & Data Flow
 
 This application uses a **Multi-Layered Architecture** to ensure strict separation of concerns, making the system highly maintainable and testable.
-```
+```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#0d1117', 'edgeLabelBackground':'#161b22', 'tertiaryColor': '#161b22', 'lineColor': '#58a6ff'}}}%%
 
 flowchart LR
