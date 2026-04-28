@@ -20,7 +20,7 @@ flowchart TD
     %% Custom Styling for a Professional Dark Theme
     classDef userNode fill:#238636,stroke:#2ea44f,stroke-width:2px,color:#ffffff,font-weight:bold;
     classDef layerBox fill:#0d1117,stroke:#30363d,stroke-width:2px,color:#58a6ff,font-style:italic;
-    classDef actionNode fill:#1f293a,stroke:#58a6ff,stroke-width:1px,color:#c9d1d9;
+    classDef actionNode fill:#238636,stroke:#2ea44f,stroke-width:2px,color:#ffffff,font-weight:bold;
     classDef pulsingNode fill:#1f293a,stroke:#58a6ff,stroke-width:3px,color:#ffffff,font-weight:bold;
     classDef dbNode fill:#bd2c00,stroke:#f97316,stroke-width:2px,color:#ffffff;
     classDef persistenceNode fill:#238636,stroke:#2ea44f,stroke-width:2px,color:#ffffff;
