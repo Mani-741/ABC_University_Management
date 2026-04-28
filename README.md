@@ -67,7 +67,7 @@ flowchart TD
 The system is built on a relational database design with strong referential integrity. I utilized Fluent API and Data Annotations to enforce business rules at the database level.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#0d1117', 'edgeLabelBackground':'#161b22', 'tertiaryColor': '#161b22', 'lineColor': '#58a6ff', 'mainBkg': '#0d1117'}}}%%
+
 
 erDiagram
     %% Core Identity
