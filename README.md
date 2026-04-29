@@ -17,10 +17,10 @@ This application uses a **Multi-Layered Architecture** to ensure strict separati
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#161b22', 'edgeLabelBackground':'#0d1117', 'tertiaryColor': '#0d1117', 'lineColor': '#58a6ff', 'mainBkg': '#0d1117'}}}%%
 
 flowchart TD
-    %% Custom Styling for a Professional Dark Theme
+    %% Custom Styling
     classDef userNode fill:#238636,stroke:#2ea44f,stroke-width:2px,color:#ffffff,font-weight:bold;
     classDef layerBox fill:#0d1117,stroke:#30363d,stroke-width:2px,color:#58a6ff,font-style:italic;
-    classDef actionNode fill:#238636,stroke:#2ea44f,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef actionNode fill:#1f293a,stroke:#58a6ff,stroke-width:1px,color:#c9d1d9;
     classDef pulsingNode fill:#1f293a,stroke:#58a6ff,stroke-width:3px,color:#ffffff,font-weight:bold;
     classDef dbNode fill:#bd2c00,stroke:#f97316,stroke-width:2px,color:#ffffff;
     classDef persistenceNode fill:#238636,stroke:#2ea44f,stroke-width:2px,color:#ffffff;
@@ -36,25 +36,18 @@ flowchart TD
     
     Ctrl -->|Invoke Action| DI_Cont(DI Container <br> Program.cs):::pulsingNode
     
-    subgraph App_Layer [Application Layer]
+    subgraph App_Layer [Application Layer: Business Logic]
         direction TB
         DI_Cont -->|Instantiate| SI[Service Interfaces]:::actionNode
         SI -->|Implement| SL[Service Implementations]:::pulsingNode
     end
     
-    %% Models Shared
-    MD[Domain Models / Entities]:::actionNode
-    
-    SL -.->|Apply Rules| MD
-    SL -->|Query Data| RI[Repository Interfaces]:::actionNode
-    
+    %% Business Logic talking directly to DbContext
     subgraph Data_Layer [Data Access Layer]
-        direction TB
-        RI -->|Implement| RL[Repository Implementations]:::actionNode
-        RL -->|LINQ Queries| DBC[[UniversityDbContext]]:::persistenceNode
+        SL -->|Direct EF Core Queries| DBC[[UniversityDbContext]]:::persistenceNode
+        DBC -.->|Map to| MD[Domain Models / Entities]:::actionNode
     end
     
-    DBC -.->|Map to| MD
     DBC -->|Generate T-SQL| EF[EF Core ORM Layer]:::pulsingNode
     EF -->|Execute Commands| SQLServer[(🗄 SQL Server Database)]:::dbNode
 
