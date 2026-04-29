@@ -72,57 +72,66 @@ The system is built on a relational database design with strong referential inte
 
 ```mermaid
 
+
 erDiagram
-    %% Core Identity
-    USER ||--|| STUDENT : "is a"
+    %% Relationships
+    USER ||--|| STUDENT : "has profile"
     
-    %% Academic Links
-    STUDENT ||--o{ ENROLLMENT : "registers"
-    STUDENT ||--o{ GRADE : "earns"
-    STUDENT ||--o{ ACADEMIC_RECORD : "finalizes"
+    STUDENT ||--o{ ENROLLMENT : "registers for"
+    STUDENT ||--o{ GRADE : "receives"
+    STUDENT ||--o{ ACADEMIC_RECORD : "maintains"
     
-    COURSE ||--o{ ENROLLMENT : "contains"
-    COURSE ||--o{ GRADE : "assigned to"
-    COURSE ||--o{ ACADEMIC_RECORD : "history of"
+    COURSE ||--o{ ENROLLMENT : "includes"
+    COURSE ||--o{ GRADE : "is awarded in"
+    COURSE ||--o{ ACADEMIC_RECORD : "historical record for"
 
     USER {
         int UserId PK
-        string Email
-        string Role
+        string Email "Unique/Required"
+        string Password "Hashed/Required"
+        Enum Role "Admin/Faculty/Registrar/Student"
+        string Department "Optional"
     }
 
     STUDENT {
         int StudentId PK
-        int UserId FK "Links to User"
-        string Name
-        string Department
+        int UserId FK "Required"
+        string Name "A-Z Regex"
+        string Email "Required"
+        string Department "Required"
+        string ContactNumber "10-Digit"
+        int EnrollmentYear "2000-2100"
     }
 
     COURSE {
         int CourseId PK
-        string CourseName
-        int Credits
+        string CourseName "Max 100"
+        int Credits "Range 1-10"
+        string Department "Max 100"
+        string SemesterOffered "Range 1-8"
     }
 
     ENROLLMENT {
         int EnrollmentId PK
         int StudentId FK
         int CourseId FK
-        string Status "Enrolled/Dropped"
+        Enum Status "ENROLLED/DROPPED"
     }
 
     GRADE {
         int GradeId PK
         int StudentId FK
         int CourseId FK
-        string GradeValue "A-F"
+        string GradeValue "Single Char A-F"
+        string Remarks "Max 255"
     }
 
     ACADEMIC_RECORD {
         int RecordId PK
         int StudentId FK
         int CourseId FK
-        string Semester
+        string Grade "Single Char A-F"
+        string Semester "Single Digit"
     }
 ```
 ---
