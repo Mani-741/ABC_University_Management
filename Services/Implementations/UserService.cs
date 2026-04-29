@@ -88,7 +88,6 @@ namespace UniversityAcademicManagementSystem.Services.Implementations
             }
         }
 
-		// FILE: Services/Implementations/UserService.cs
 		public async Task<bool> UpdatePasswordAsync(int userId, string newPassword)
 		{
 			try
@@ -96,7 +95,6 @@ namespace UniversityAcademicManagementSystem.Services.Implementations
 				var user = await context.Users.FindAsync(userId);
 				if (user == null) return false;
 
-				// Hash the new password before saving
 				user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
 
 				context.Users.Update(user);

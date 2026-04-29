@@ -1,12 +1,10 @@
 ﻿using System.Security.Claims;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UniversityAcademicManagementSystem.Data;
 using UniversityAcademicManagementSystem.Models;
-using UniversityAcademicManagementSystem.Services.Implementations;
 using UniversityAcademicManagementSystem.Services.Interfaces;
 
 namespace UniversityAcademicManagementSystem.Controllers
@@ -162,9 +160,9 @@ namespace UniversityAcademicManagementSystem.Controllers
             return View(courses);
         }
 
-		// FILE: Controllers/HomeController.cs
+	
 
-		[Authorize] // Ensure only logged-in users can change password
+		[Authorize] 
 		[HttpGet]
 		public IActionResult ChangePassword()
 		{
@@ -178,15 +176,36 @@ namespace UniversityAcademicManagementSystem.Controllers
 			var email = User.Identity?.Name;
 			if (string.IsNullOrEmpty(email)) return RedirectToAction("Login");
 
-			// 1. Basic Validation
+			
 			if (newPassword != confirmPassword)
 			{
 				ModelState.AddModelError("", "New passwords do not match.");
 				return View();
 			}
 
-			// 2. Verify Current Password
-			// Using LoginUserAsync is clever here because it already handles BCrypt verification
+			var passwordRegex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$");
+
+			if (string.IsNullOrEmpty(newPassword) || newPassword.Length < 8)
+			{
+				ModelState.AddModelError("", "Password must be at least 8 characters long.");
+			}
+			else if (!passwordRegex.IsMatch(newPassword))
+			{
+				ModelState.AddModelError("", "Password must contain an uppercase letter, lowercase letter, number, and special character.");
+			}
+
+			if (newPassword != confirmPassword)
+			{
+				ModelState.AddModelError("", "New passwords do not match.");
+			}
+
+			
+			if (!ModelState.IsValid)
+			{
+				return View();
+			}
+
+			
 			var user = await _userService.LoginUserAsync(email, currentPassword);
 			if (user == null)
 			{
@@ -194,13 +213,13 @@ namespace UniversityAcademicManagementSystem.Controllers
 				return View();
 			}
 
-			// 3. Update Password
+			
 			var result = await _userService.UpdatePasswordAsync(user.UserId, newPassword);
 			if (result)
 			{
 				TempData["Success"] = "Password updated successfully!";
 
-				// Redirect based on role instead of logging out
+				
 				if (User.IsInRole("Admin")) return RedirectToAction("Index", "Admin");
 				if (User.IsInRole("Faculty")) return RedirectToAction("Index", "Faculty");
 				if (User.IsInRole("Registrar")) return RedirectToAction("Index", "Registrar");
