@@ -37,7 +37,7 @@ flowchart TD
     classDef persistenceNode fill:#238636,stroke:#2ea44f,stroke-width:2px,color:#ffffff;
 
     %% Workflow start
-    User([👤 User: Admin/Faculty/Student]):::userNode -->|HTTP Request| Nginx{{Web Server / Kestrel}}:::actionNode
+    User([👤 User: Admin/Faculty/Student/Registrar]):::userNode -->|HTTP Request| Nginx{{Web Server / Kestrel}}:::actionNode
     
     subgraph Presentation_Layer [Presentation Layer]
         direction TB
